@@ -1,0 +1,8 @@
+description = "Sends a mock Wero payment using provided amount and IBAN."
+prompt = """
+Using the provided arguments: {{args}}
+
+1. Inject the provided amount and IBAN into `templates/pacs_008_template.xml` and save the populated file as `tmp_payload.xml`. Generate sensible mock values for the remaining placeholders.
+2. Run the validation tool using the CLI shell command tool: `python3 validate_iso.py tmp_payload.xml`.
+3. If the validation is successful, send the payload to our mock gateway using the CLI shell command tool: `curl -X POST -H "Content-Type: application/xml" -d @tmp_payload.xml http://localhost:5000/process-payment`.
+"""
