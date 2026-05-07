@@ -195,6 +195,30 @@
 
         .hidden { display: none; }
 
+        .intel-report {
+            background: rgba(0, 242, 255, 0.1);
+            border-left: 2px solid var(--imperial-cyan);
+            padding: 12px;
+            margin: 10px 0 20px 0;
+            font-size: 0.85rem;
+            color: var(--imperial-cyan);
+            display: none; /* Hidden by default */
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .intel-report strong {
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: block;
+            margin-bottom: 5px;
+            color: #fff;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
         /* Animation for the directives */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
@@ -220,6 +244,7 @@
     </div>
 
     <div class="mode-toggle">
+        <button id="techToggle" class="mode-btn" onclick="toggleAllTech()" style="margin-right: 10px; border-color: #ffd700; color: #ffd700;">Show Intelligence Reports</button>
         <button id="soloBtn" class="mode-btn active" onclick="setMode('solo')">Local Operative</button>
         <button id="fleetBtn" class="mode-btn" onclick="setMode('fleet')">Imperial Officer</button>
     </div>
@@ -270,6 +295,10 @@ python3 mcp_fraud_server.py</code>
                     <button class="copy-btn" onclick="copyText(this)">Copy</button>
                     <code>gemini mcp add --transport sse fraud-oracle http://localhost:8000/sse</code>
                 </div>
+                <div class="intel-report">
+                    <strong>Intelligence Report:</strong> 
+                    This registers the persistent Fraud Oracle service with Gemini. By using <code>--transport sse</code>, the CLI connects to the already-running process instead of spawning a new one.
+                </div>
             </li>
         </ol>
     </section>
@@ -284,11 +313,19 @@ python3 mcp_fraud_server.py</code>
             <button class="copy-btn" onclick="copyText(this)">Copy</button>
             <code>gemini /init</code>
         </div>
+        <div class="intel-report">
+            <strong>Intelligence Report:</strong> 
+            The <code>/init</code> command performs a local-first scan of your directory. It builds a semantic map of your files (like the XML templates) so Gemini can reference them without uploading the entire codebase to the cloud.
+        </div>
         
         <p>Analyze the pacs.008 template requirements:</p>
         <div class="terminal">
             <button class="copy-btn" onclick="copyText(this)">Copy</button>
             <code>gemini "Identify the mandatory fields in @(templates/pacs_008_template.xml) for a CCB transfer."</code>
+        </div>
+        <div class="intel-report">
+            <strong>Intelligence Report:</strong> 
+            Using <code>@</code> allows you to inject the contents of a local file directly into the LLM's context window. This ensures the model is looking at your specific Imperial schema, not general web data.
         </div>
     </section>
 
@@ -301,6 +338,10 @@ python3 mcp_fraud_server.py</code>
         <div class="terminal">
             <button class="copy-btn" onclick="copyText(this)">Copy</button>
             <code>gemini "Create a custom command '/wero-send' that takes {{amount}} and {{iban}}, injects them into @(templates/pacs_008_template.xml), and runs !(python3 validate_iso.py)."</code>
+        </div>
+        <div class="intel-report">
+            <strong>Intelligence Report:</strong> 
+            Custom commands (slash commands) wrap complex prompts into reusable aliases. The <code>{{...}}</code> syntax defines arguments, while <code>!</code> allows the agent to execute local shell commands like your Python validator.
         </div>
 
         <p>Execute a high-value transfer test:</p>
@@ -324,6 +365,10 @@ python3 mcp_fraud_server.py</code>
             <button class="copy-btn" onclick="copyText(this)">Copy</button>
             <code>gemini /resume "Based on that, generate the snippet for 'High Priority'."</code>
         </div>
+        <div class="intel-report">
+            <strong>Intelligence Report:</strong> 
+            The <code>/resume</code> command allows the CLI to pick up exactly where a previous conversation left off, even after sessions are closed or interrupted, preserving the critical state of your banking transaction.
+        </div>
     </section>
 
     <!-- MODULE 4 -->
@@ -335,6 +380,10 @@ python3 mcp_fraud_server.py</code>
         <div class="terminal">
             <button class="copy-btn" onclick="copyText(this)">Copy</button>
             <code>cat logs/clearing.log | gemini -p "Identify any 'MS03' errors in these logs and provide a resolution."</code>
+        </div>
+        <div class="intel-report">
+            <strong>Intelligence Report:</strong> 
+            Standard piping (<code>|</code>) into the <code>-p</code> (prompt) flag creates a non-interactive pipeline. This is ideal for bulk processing log files where you want an immediate answer without starting a full chat session.
         </div>
     </section>
 
@@ -351,6 +400,10 @@ python3 mcp_fraud_server.py</code>
         <div class="terminal">
             <button class="copy-btn" onclick="copyText(this)">Copy</button>
             <code>gemini "Check the fraud status for IBAN DE999999999999999999 and tell me if we should block the payment."</code>
+        </div>
+        <div class="intel-report">
+            <strong>Intelligence Report:</strong> 
+            This utilizes the **Model Context Protocol (MCP)**. Instead of guessing, Gemini detects that it has a specialized tool (the Fraud Oracle) available and automatically calls it to fetch real-time bank data.
         </div>
     </section>
 
@@ -386,6 +439,20 @@ python3 mcp_fraud_server.py</code>
             soloBtn.classList.add('active');
             fleetBtn.classList.remove('active');
         }
+    }
+
+    let techVisible = false;
+    function toggleAllTech() {
+        const reports = document.querySelectorAll('.intel-report');
+        const btn = document.getElementById('techToggle');
+        techVisible = !techVisible;
+        
+        reports.forEach(r => {
+            r.style.display = techVisible ? 'block' : 'none';
+        });
+
+        btn.innerText = techVisible ? 'Hide Intelligence Reports' : 'Show Intelligence Reports';
+        btn.style.boxShadow = techVisible ? '0 0 15px #ffd700' : 'none';
     }
 
     async function copyText(btn) {
