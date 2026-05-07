@@ -1,5 +1,9 @@
 # 🎭 Host & Speaker Guide: Coruscant Central Bank (CCB)
 
+> [!TIP]
+> **Use the Interactive Portal!**
+> Open **[ccb_portal.html](./ccb_portal.html)** and set the toggle to **"Imperial Officer"** for a sleek, themed dashboard to use during your presentation.
+
 ## 🏗️ Pre-Workshop Setup 
 
 1. **Clear the session history (CRITICAL):**

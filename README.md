@@ -2,7 +2,13 @@
 
 Welcome to the **Coruscant Central Bank (CCB)** developer sandbox! 
 
-This repository contains the templates, mock gateways, and validation scripts used to test our new **Wero Instant Payment** integration (ISO 20022 standards). It also serves as the hands-on environment for mastering the **Gemini CLI** and the **Model Context Protocol (MCP)** in a secure development workflow.
+## 🚀 Get Started (Interactive Guide)
+
+For the most immersive experience, open our interactive terminal guide:
+
+👉 **[Open ccb_portal.html in your browser](./ccb_portal.html)**
+
+This portal includes a "Solo" mode for local setup and a "Fleet" mode for hosted workshops, along with interactive command copying and Star Wars themed narrative briefings.
 
 ---
 

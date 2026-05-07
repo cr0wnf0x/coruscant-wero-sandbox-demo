@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coruscant Central Bank - Employee Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --imperial-red: #ff0033;
+            --imperial-cyan: #00f2ff;
+            --bg-black: #0a0a0a;
+            --panel-gray: #1a1a1a;
+            --text-gray: #b0b0b0;
+            --glow-red: 0 0 10px rgba(255, 0, 51, 0.5);
+            --glow-cyan: 0 0 10px rgba(0, 242, 255, 0.5);
+        }
+
+        body {
+            background-color: var(--bg-black);
+            color: var(--text-gray);
+            font-family: 'Share+Tech+Mono', monospace;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        /* Scanline effect */
+        body::before {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 9999;
+            background-size: 100% 4px, 3px 100%;
+            pointer-events: none;
+        }
+
+        header {
+            background-color: var(--panel-gray);
+            border-bottom: 2px solid var(--imperial-red);
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--glow-red);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .imperial-cog {
+            width: 50px;
+            height: 50px;
+            fill: var(--imperial-red);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .title-block h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+            color: var(--imperial-red);
+            text-transform: uppercase;
+        }
+
+        .mode-toggle {
+            display: flex;
+            background: #000;
+            border: 1px solid var(--imperial-cyan);
+            border-radius: 20px;
+            padding: 5px;
+        }
+
+        .mode-btn {
+            padding: 8px 15px;
+            border: none;
+            background: none;
+            color: var(--text-gray);
+            cursor: pointer;
+            border-radius: 15px;
+            transition: all 0.3s;
+            font-family: inherit;
+            font-size: 0.8rem;
+        }
+
+        .mode-btn.active {
+            background: var(--imperial-cyan);
+            color: #000;
+            box-shadow: var(--glow-cyan);
+        }
+
+        main {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .directive {
+            background: var(--panel-gray);
+            border-left: 4px solid var(--imperial-cyan);
+            padding: 25px;
+            margin-bottom: 30px;
+            position: relative;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.5);
+        }
+
+        .directive h2 {
+            margin-top: 0;
+            color: var(--imperial-cyan);
+            text-transform: uppercase;
+            font-size: 1.2rem;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+        }
+
+        .setup-section {
+            display: block; /* Controlled by JS */
+            border-color: var(--imperial-red);
+        }
+
+        .setup-section h2 {
+            color: var(--imperial-red);
+        }
+
+        .briefing-box {
+            background: rgba(0, 242, 255, 0.05);
+            border: 1px dashed var(--imperial-cyan);
+            padding: 15px;
+            margin: 15px 0;
+            font-style: italic;
+            font-size: 0.9rem;
+        }
+
+        .terminal {
+            background: #000;
+            padding: 15px;
+            border-radius: 5px;
+            position: relative;
+            margin: 15px 0;
+        }
+
+        code {
+            color: #00ff00;
+            display: block;
+            white-space: pre-wrap;
+        }
+
+        .copy-btn {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            background: var(--imperial-cyan);
+            border: none;
+            color: #000;
+            padding: 3px 8px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            border-radius: 3px;
+            font-family: inherit;
+            opacity: 0.7;
+        }
+
+        .copy-btn:hover {
+            opacity: 1;
+        }
+
+        .status-badge {
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 3px;
+            text-transform: uppercase;
+            margin-left: 10px;
+        }
+
+        .badge-mandatory { background: var(--imperial-red); color: white; }
+        .badge-info { background: #333; color: var(--text-gray); }
+
+        footer {
+            text-align: center;
+            padding: 40px;
+            font-size: 0.8rem;
+            color: #444;
+            border-top: 1px solid #222;
+        }
+
+        .hidden { display: none; }
+
+        /* Animation for the directives */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .directive { animation: fadeIn 0.5s ease-out forwards; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo-container">
+        <svg class="imperial-cog" viewBox="0 0 100 100">
+            <path d="M50 0 L58 15 L75 15 L70 32 L85 40 L75 56 L85 75 L67 75 L58 90 L42 90 L33 75 L15 75 L25 56 L15 40 L30 32 L25 15 L42 15 Z" />
+            <circle cx="50" cy="50" r="10" fill="none" stroke="black" stroke-width="2" />
+            <path d="M50 25 L50 35 M50 65 L50 75 M25 50 L35 50 M65 50 L75 50" stroke="black" stroke-width="2" />
+        </svg>
+        <div class="title-block">
+            <h1>Coruscant Central Bank</h1>
+            <div style="font-size: 0.7rem; color: var(--text-gray);">WERO INTEGRATION TERMINAL v4.2.7</div>
+        </div>
+    </div>
+
+    <div class="mode-toggle">
+        <button id="soloBtn" class="mode-btn active" onclick="setMode('solo')">Local Operative</button>
+        <button id="fleetBtn" class="mode-btn" onclick="setMode('fleet')">Imperial Officer</button>
+    </div>
+</header>
+
+<main>
+    <!-- STEP 0: ONLY FOR SOLO -->
+    <section id="setupSection" class="directive setup-section">
+        <div class="status-badge badge-mandatory">Local Setup Required</div>
+        <h2>Directive 0: Environmental Preparation</h2>
+        <p>Before beginning integration tests, ensure your local terminal is synchronized with the CCB Core Services.</p>
+        
+        <div class="briefing-box">
+            "We cannot trust the cloud. Your local sandbox must be isolated and dependencies strictly controlled."
+        </div>
+
+        <ol>
+            <li><strong>Clone the Archive:</strong>
+                <div class="terminal">
+                    <button class="copy-btn" onclick="copyText(this)">Copy</button>
+                    <code>git clone https://github.com/cr0wnf0x/coruscant-wero-sandbox-demo.git
+cd coruscant-wero-sandbox-demo</code>
+                </div>
+            </li>
+            <li><strong>Initialize Core Logic:</strong>
+                <div class="terminal">
+                    <button class="copy-btn" onclick="copyText(this)">Copy</button>
+                    <code>python3 -m venv .venv
+source .venv/bin/activate
+pip install flask lxml requests mcp</code>
+                </div>
+            </li>
+            <li><strong>Ignite Background Services:</strong>
+                <p>Run these in two separate background terminal tabs:</p>
+                <div class="terminal">
+                    <button class="copy-btn" onclick="copyText(this)">Copy</button>
+                    <code># Tab 1: Clearing Gateway
+python3 mock_gateway.py</code>
+                </div>
+                <div class="terminal">
+                    <button class="copy-btn" onclick="copyText(this)">Copy</button>
+                    <code># Tab 2: Fraud Oracle (SSE)
+python3 mcp_fraud_server.py</code>
+                </div>
+            </li>
+            <li><strong>Register Oracle:</strong>
+                <div class="terminal">
+                    <button class="copy-btn" onclick="copyText(this)">Copy</button>
+                    <code>gemini mcp add --transport sse fraud-oracle http://localhost:8000/sse</code>
+                </div>
+            </li>
+        </ol>
+    </section>
+
+    <!-- MODULE 1 -->
+    <section class="directive">
+        <div class="status-badge badge-info">Module 1</div>
+        <h2>Directive 1: Contextual Awareness</h2>
+        <p>Initialize the Gemini CLI and map the bank's transaction templates.</p>
+        
+        <div class="terminal">
+            <button class="copy-btn" onclick="copyText(this)">Copy</button>
+            <code>gemini /init</code>
+        </div>
+        
+        <p>Analyze the pacs.008 template requirements:</p>
+        <div class="terminal">
+            <button class="copy-btn" onclick="copyText(this)">Copy</button>
+            <code>gemini "Identify the mandatory fields in @(templates/pacs_008_template.xml) for a CCB transfer."</code>
+        </div>
+    </section>
+
+    <!-- MODULE 2 -->
+    <section class="directive">
+        <div class="status-badge badge-info">Module 2</div>
+        <h2>Directive 2: The Hyperdrive (Automation)</h2>
+        <p>Automate the generation and validation of ISO 20022 payments using custom commands.</p>
+        
+        <div class="terminal">
+            <button class="copy-btn" onclick="copyText(this)">Copy</button>
+            <code>gemini "Create a custom command '/wero-send' that takes {{amount}} and {{iban}}, injects them into @(templates/pacs_008_template.xml), and runs !(python3 validate_iso.py)."</code>
+        </div>
+
+        <p>Execute a high-value transfer test:</p>
+        <div class="terminal">
+            <button class="copy-btn" onclick="copyText(this)">Copy</button>
+            <code>gemini /wero-send 500.00 DE123456789012345678</code>
+        </div>
+    </section>
+
+    <!-- MODULE 3 -->
+    <section class="directive">
+        <div class="status-badge badge-info">Module 3</div>
+        <h2>Directive 3: Transaction Persistence</h2>
+        <p>Learn to resume interrupted transaction threads.</p>
+        
+        <div class="terminal">
+            <button class="copy-btn" onclick="copyText(this)">Copy</button>
+            <code>gemini "How do I add a 'Settlement Priority' to this XML?"</code>
+        </div>
+        <div class="terminal">
+            <button class="copy-btn" onclick="copyText(this)">Copy</button>
+            <code>gemini /resume "Based on that, generate the snippet for 'High Priority'."</code>
+        </div>
+    </section>
+
+    <!-- MODULE 4 -->
+    <section class="directive">
+        <div class="status-badge badge-info">Module 4</div>
+        <h2>Directive 4: Logistics Triage</h2>
+        <p>Pipe raw clearing logs for automated error translation.</p>
+        
+        <div class="terminal">
+            <button class="copy-btn" onclick="copyText(this)">Copy</button>
+            <code>cat logs/clearing.log | gemini -p "Identify any 'MS03' errors in these logs and provide a resolution."</code>
+        </div>
+    </section>
+
+    <!-- MODULE 5 -->
+    <section class="directive">
+        <div class="status-badge badge-info">Module 5</div>
+        <h2>Directive 5: The Fraud Oracle (MCP)</h2>
+        <p>Verify suspicious IBANs against the bank's live real-time database.</p>
+        
+        <div class="briefing-box">
+             "Static files are for historians. A real Imperial Officer queries the Oracle before authorizing a credit."
+        </div>
+
+        <div class="terminal">
+            <button class="copy-btn" onclick="copyText(this)">Copy</button>
+            <code>gemini "Check the fraud status for IBAN DE999999999999999999 and tell me if we should block the payment."</code>
+        </div>
+    </section>
+
+    <!-- FINAL -->
+    <section class="directive" style="border-color: #ffd700;">
+        <div class="status-badge" style="background: #ffd700; color: #000;">Final Challenge</div>
+        <h2>Grand Admiral's Inspection</h2>
+        <p>Assume the persona of a Strict Imperial Compliance Auditor and audit the entire flow.</p>
+        <div class="terminal">
+            <button class="copy-btn" onclick="copyText(this)">Copy</button>
+            <code>gemini "Set your persona to act as a strict Imperial Compliance Auditor."</code>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <p>PROPERTY OF THE CORUSCANT CENTRAL BANK. UNAUTHORIZED ACCESS IS PUNISHABLE BY RE-EDUCATION.</p>
+    <p>"Processing your SEPA transfers in less than 12 parsecs."</p>
+</footer>
+
+<script>
+    function setMode(mode) {
+        const setupSection = document.getElementById('setupSection');
+        const soloBtn = document.getElementById('soloBtn');
+        const fleetBtn = document.getElementById('fleetBtn');
+
+        if (mode === 'fleet') {
+            setupSection.classList.add('hidden');
+            fleetBtn.classList.add('active');
+            soloBtn.classList.remove('active');
+        } else {
+            setupSection.classList.remove('hidden');
+            soloBtn.classList.add('active');
+            fleetBtn.classList.remove('active');
+        }
+    }
+
+    async function copyText(btn) {
+        const code = btn.nextElementSibling.innerText;
+        try {
+            await navigator.clipboard.writeText(code);
+            const originalText = btn.innerText;
+            btn.innerText = 'COPIED!';
+            btn.style.background = '#00ff00';
+            setTimeout(() => {
+                btn.innerText = originalText;
+                btn.style.background = 'var(--imperial-cyan)';
+            }, 2000);
+        } catch (err) {
+            console.error('Failed to copy: ', err);
+        }
+    }
+</script>
+
+</body>
+</html>

@@ -1,5 +1,9 @@
 # 🚀 Lab Guide: Coruscant Central Bank (CCB) Sandbox
 
+> [!TIP]
+> **New Interactive Experience Available!**
+> Open **[ccb_portal.html](./ccb_portal.html)** in your browser for an immersive, Star Wars-themed interactive guide with copy-paste commands.
+
 Welcome, Developer. Today, we test our new Wero Instant Payment gateway and integrate real-time fraud detection.
 
 ---
