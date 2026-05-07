@@ -2,13 +2,19 @@
 
 Welcome to the **Coruscant Central Bank (CCB)** developer sandbox! 
 
-## 🚀 Get Started (Interactive Guide)
+## 🚀 The Strategic Command Center (Interactive Guide)
 
-For the most immersive experience, open our interactive terminal guide:
+For the most immersive experience, we have created a dedicated **Interactive Portal**. This is your central hub for the workshop, designed to look and feel like an Imperial Bank Terminal.
 
-👉 **[Open ccb_portal.html in your browser](./ccb_portal.html)**
+![CCB Portal Preview](./portal_preview.svg)
 
-This portal includes a "Solo" mode for local setup and a "Fleet" mode for hosted workshops, along with interactive command copying and Star Wars themed narrative briefings.
+### Why use the Portal?
+*   **Dual-Track Navigation:** Toggle between **"Local Operative"** (for solo setup) and **"Imperial Officer"** (for hosted workshops).
+*   **Tactical Intelligence:** Click **"Show Intelligence Reports"** to reveal deep-dives into how each Gemini CLI command works under the hood.
+*   **One-Click Deployment:** Copy commands directly to your clipboard with themed "Terminal" blocks.
+*   **Live Narrative:** Follow the story of the Wero implementation through "Mission Directives" and "Grand Admiral Briefings."
+
+👉 **[Launch the CCB Portal (ccb_portal.html)](./ccb_portal.html)**
 
 ---
 
