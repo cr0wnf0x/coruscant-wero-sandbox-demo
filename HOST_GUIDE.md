@@ -18,6 +18,10 @@
    # Tab 2: The MCP Fraud Oracle
    python3 mcp_fraud_server.py
    ```
+4. **Register the MCP server with Gemini CLI:**
+   ```bash
+   gemini mcp add --transport sse fraud-oracle http://localhost:8000/sse
+   ```
 
 ---
 

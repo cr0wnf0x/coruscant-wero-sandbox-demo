@@ -18,4 +18,6 @@ def check_iban_fraud_status(iban: str) -> str:
     return f"APPROVE: IBAN {iban} is clean."
 
 if __name__ == "__main__":
-    mcp.run()
+    # In a real-world scenario, we run this as a persistent SSE service.
+    # This allows multiple clients to connect to the same Fraud Oracle.
+    mcp.run(transport='sse')

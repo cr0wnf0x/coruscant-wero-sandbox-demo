@@ -21,7 +21,11 @@ Welcome, Developer. Today, we test our new Wero Instant Payment gateway and inte
    python3 mock_gateway.py
    python3 mcp_fraud_server.py
    ```
-4. **Map the CCB repository:**
+4. **Register the Fraud Oracle with Gemini CLI:**
+   ```bash
+   gemini mcp add --transport sse fraud-oracle http://localhost:8000/sse
+   ```
+5. **Map the CCB repository:**
    ```bash
    gemini /init
    ```
